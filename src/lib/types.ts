@@ -27,7 +27,10 @@ export interface Product {
   availableQuantity: number;
   condition: ProductCondition;
   status: ProductStatus;
+  /** lucide icon name, used as the fallback when no photo is available */
   icon: string;
+  /** photo in /public/equipment — see IMAGE_CREDITS.md */
+  image?: string;
   notes?: string;
 }
 

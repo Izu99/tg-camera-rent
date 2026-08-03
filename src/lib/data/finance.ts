@@ -38,7 +38,7 @@ export const revenueHistory: { date: string; revenue: number; expenses: number }
   { date: "2026-07-31", revenue: 118000, expenses: 15500 },
   { date: "2026-08-01", revenue: 132000, expenses: 385000 },
   { date: "2026-08-02", revenue: 64000, expenses: 9500 },
-  { date: "2026-08-03", revenue: 41000, expenses: 4000 },
+  { date: "2026-08-03", revenue: 88000, expenses: 4000 },
 ];
 
 // Revenue share by equipment category (last 30 days)
