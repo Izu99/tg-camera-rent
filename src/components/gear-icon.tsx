@@ -5,6 +5,12 @@ import {
   Mic,
   Plane,
   MoveVertical,
+  Monitor,
+  BatteryCharging,
+  HardDrive,
+  Wrench,
+  Cable,
+  Briefcase,
   Package,
 } from "lucide-react";
 
@@ -34,6 +40,18 @@ export function GearIcon({
       return <Plane {...props} />;
     case "MoveVertical":
       return <MoveVertical {...props} />;
+    case "Monitor":
+      return <Monitor {...props} />;
+    case "BatteryCharging":
+      return <BatteryCharging {...props} />;
+    case "HardDrive":
+      return <HardDrive {...props} />;
+    case "Wrench":
+      return <Wrench {...props} />;
+    case "Cable":
+      return <Cable {...props} />;
+    case "Briefcase":
+      return <Briefcase {...props} />;
     default:
       return <Package {...props} />;
   }

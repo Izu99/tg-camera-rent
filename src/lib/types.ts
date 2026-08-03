@@ -7,12 +7,19 @@ export interface Category {
   icon: string;
 }
 
+export interface Subcategory {
+  id: ID;
+  categoryId: ID;
+  name: string;
+}
+
 export type ProductCondition = "Excellent" | "Good" | "Fair" | "Needs Repair";
 export type ProductStatus = "Available" | "Rented" | "In Repair" | "Reserved";
 
 export interface Product {
   id: ID;
   categoryId: ID;
+  subcategoryId: ID;
   name: string;
   brand: string;
   model: string;

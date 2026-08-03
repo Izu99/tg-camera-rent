@@ -4,6 +4,7 @@ export const products: Product[] = [
   {
     id: "pr-1",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-2",
     name: "Sony A7 IV",
     brand: "Sony",
     model: "A7 IV",
@@ -24,6 +25,7 @@ export const products: Product[] = [
   {
     id: "pr-2",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-2",
     name: "Canon EOS R5",
     brand: "Canon",
     model: "EOS R5",
@@ -44,6 +46,7 @@ export const products: Product[] = [
   {
     id: "pr-3",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-2",
     name: "Nikon Z6 II",
     brand: "Nikon",
     model: "Z6 II",
@@ -64,6 +67,7 @@ export const products: Product[] = [
   {
     id: "pr-4",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-1",
     name: "Sony FX3 Cinema",
     brand: "Sony",
     model: "FX3",
@@ -84,6 +88,7 @@ export const products: Product[] = [
   {
     id: "pr-5",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-1",
     name: "Canon C70 Cinema",
     brand: "Canon",
     model: "EOS C70",
@@ -104,6 +109,7 @@ export const products: Product[] = [
   {
     id: "pr-6",
     categoryId: "cat-1",
+    subcategoryId: "sub-1-3",
     name: "GoPro Hero 12",
     brand: "GoPro",
     model: "Hero 12 Black",
@@ -124,6 +130,7 @@ export const products: Product[] = [
   {
     id: "pr-7",
     categoryId: "cat-2",
+    subcategoryId: "sub-2-2",
     name: "Sony 24-70mm f/2.8 GM",
     brand: "Sony",
     model: "FE 24-70mm GM II",
@@ -144,6 +151,7 @@ export const products: Product[] = [
   {
     id: "pr-8",
     categoryId: "cat-2",
+    subcategoryId: "sub-2-2",
     name: "Canon RF 70-200mm f/2.8",
     brand: "Canon",
     model: "RF 70-200mm f/2.8L",
@@ -164,6 +172,7 @@ export const products: Product[] = [
   {
     id: "pr-9",
     categoryId: "cat-2",
+    subcategoryId: "sub-2-2",
     name: "Sigma 35mm f/1.4 Art",
     brand: "Sigma",
     model: "35mm Art",
@@ -184,6 +193,7 @@ export const products: Product[] = [
   {
     id: "pr-10",
     categoryId: "cat-2",
+    subcategoryId: "sub-2-2",
     name: "Sony 85mm f/1.4 GM",
     brand: "Sony",
     model: "FE 85mm GM",
@@ -203,7 +213,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-11",
-    categoryId: "cat-3",
+    categoryId: "cat-4",
+    subcategoryId: "sub-4-1",
     name: "Aputure 300d II LED",
     brand: "Aputure",
     model: "300d Mark II",
@@ -223,7 +234,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-12",
-    categoryId: "cat-3",
+    categoryId: "cat-4",
+    subcategoryId: "sub-4-2",
     name: "Godox AD200 Pro Flash",
     brand: "Godox",
     model: "AD200 Pro",
@@ -243,7 +255,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-13",
-    categoryId: "cat-3",
+    categoryId: "cat-4",
+    subcategoryId: "sub-4-1",
     name: "Godox SL-150 II LED Kit",
     brand: "Godox",
     model: "SL-150 II (2-light kit)",
@@ -263,7 +276,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-14",
-    categoryId: "cat-4",
+    categoryId: "cat-5",
+    subcategoryId: "sub-5-1",
     name: "Rode NTG5 Shotgun Mic",
     brand: "Rode",
     model: "NTG5",
@@ -283,7 +297,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-15",
-    categoryId: "cat-4",
+    categoryId: "cat-5",
+    subcategoryId: "sub-5-2",
     name: "Zoom H6 Recorder",
     brand: "Zoom",
     model: "H6",
@@ -303,7 +318,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-16",
-    categoryId: "cat-4",
+    categoryId: "cat-5",
+    subcategoryId: "sub-5-1",
     name: "Rode Wireless Pro (2-Mic Kit)",
     brand: "Rode",
     model: "Wireless Pro",
@@ -323,7 +339,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-17",
-    categoryId: "cat-5",
+    categoryId: "cat-1",
+    subcategoryId: "sub-1-4",
     name: "DJI Mavic 3 Pro",
     brand: "DJI",
     model: "Mavic 3 Pro",
@@ -343,7 +360,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-18",
-    categoryId: "cat-5",
+    categoryId: "cat-1",
+    subcategoryId: "sub-1-4",
     name: "DJI Air 2S",
     brand: "DJI",
     model: "Air 2S",
@@ -363,7 +381,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-19",
-    categoryId: "cat-5",
+    categoryId: "cat-3",
+    subcategoryId: "sub-3-2",
     name: "DJI RS 3 Pro Gimbal",
     brand: "DJI",
     model: "RS 3 Pro",
@@ -384,7 +403,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-20",
-    categoryId: "cat-6",
+    categoryId: "cat-3",
+    subcategoryId: "sub-3-1",
     name: "Sachtler Flowtech 75 Tripod",
     brand: "Sachtler",
     model: "Flowtech 75 MS",
@@ -404,7 +424,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-21",
-    categoryId: "cat-6",
+    categoryId: "cat-3",
+    subcategoryId: "sub-3-1",
     name: "Manfrotto 055 Tripod Kit",
     brand: "Manfrotto",
     model: "055XPRO3",
@@ -424,7 +445,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-22",
-    categoryId: "cat-6",
+    categoryId: "cat-3",
+    subcategoryId: "sub-3-3",
     name: "Edelkrone SliderPlus PRO",
     brand: "Edelkrone",
     model: "SliderPlus PRO",
@@ -444,7 +466,8 @@ export const products: Product[] = [
   },
   {
     id: "pr-23",
-    categoryId: "cat-7",
+    categoryId: "cat-8",
+    subcategoryId: "sub-8-1",
     name: "Sony 128GB CFexpress Type A",
     brand: "Sony",
     model: "CEA-G128T",
@@ -465,6 +488,7 @@ export const products: Product[] = [
   {
     id: "pr-24",
     categoryId: "cat-7",
+    subcategoryId: "sub-7-1",
     name: "V-Mount Battery + Charger Kit",
     brand: "IDX",
     model: "E-HL9",

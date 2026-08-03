@@ -43,11 +43,13 @@ export const revenueHistory: { date: string; revenue: number; expenses: number }
 
 // Revenue share by equipment category (last 30 days)
 export const categoryRevenue: { category: string; revenue: number }[] = [
-  { category: "Cameras", revenue: 612000 },
-  { category: "Lenses", revenue: 248000 },
-  { category: "Drones & Gimbals", revenue: 196000 },
+  { category: "Cameras & Bodies", revenue: 612000 },
+  { category: "Lenses & Optics", revenue: 248000 },
+  { category: "Support & Stabilization", revenue: 196000 },
   { category: "Lighting", revenue: 134000 },
-  { category: "Audio", revenue: 87000 },
-  { category: "Tripods & Support", revenue: 58000 },
-  { category: "Accessories", revenue: 32000 },
+  { category: "Audio & Sound", revenue: 87000 },
+  { category: "Monitoring & Video", revenue: 64000 },
+  { category: "Power & Battery", revenue: 41000 },
+  { category: "Storage & Media", revenue: 32000 },
+  { category: "Grip & Rigging", revenue: 21000 },
 ];
