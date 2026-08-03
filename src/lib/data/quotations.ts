@@ -1,0 +1,73 @@
+import type { Quotation } from "@/lib/types";
+
+export const quotations: Quotation[] = [
+  {
+    id: "qt-1",
+    quotationNumber: "QUO-2026-088",
+    customerId: "cu-7",
+    date: "2026-08-01",
+    validUntil: "2026-08-15",
+    items: [
+      { productId: "pr-5", quantity: 1, unitPrice: 15000 },
+      { productId: "pr-14", quantity: 2, unitPrice: 1800 },
+    ],
+    totalAmount: 63000,
+    status: "Sent",
+  },
+  {
+    id: "qt-2",
+    quotationNumber: "QUO-2026-089",
+    customerId: "cu-14",
+    date: "2026-08-02",
+    validUntil: "2026-08-16",
+    items: [{ productId: "pr-4", quantity: 2, unitPrice: 12000 }],
+    totalAmount: 84000,
+    status: "Draft",
+  },
+  {
+    id: "qt-3",
+    quotationNumber: "QUO-2026-090",
+    customerId: "cu-11",
+    date: "2026-07-29",
+    validUntil: "2026-08-12",
+    items: [
+      { productId: "pr-2", quantity: 1, unitPrice: 8000 },
+      { productId: "pr-8", quantity: 1, unitPrice: 4500 },
+    ],
+    totalAmount: 37500,
+    status: "Accepted",
+  },
+  {
+    id: "qt-4",
+    quotationNumber: "QUO-2026-091",
+    customerId: "cu-5",
+    date: "2026-07-25",
+    validUntil: "2026-08-01",
+    items: [{ productId: "pr-17", quantity: 1, unitPrice: 12000 }],
+    totalAmount: 24000,
+    status: "Expired",
+  },
+  {
+    id: "qt-5",
+    quotationNumber: "QUO-2026-092",
+    customerId: "cu-2",
+    date: "2026-08-03",
+    validUntil: "2026-08-17",
+    items: [
+      { productId: "pr-1", quantity: 3, unitPrice: 6500 },
+      { productId: "pr-11", quantity: 2, unitPrice: 5000 },
+    ],
+    totalAmount: 68500,
+    status: "Sent",
+  },
+  {
+    id: "qt-6",
+    quotationNumber: "QUO-2026-093",
+    customerId: "cu-13",
+    date: "2026-07-30",
+    validUntil: "2026-08-13",
+    items: [{ productId: "pr-3", quantity: 1, unitPrice: 5500 }],
+    totalAmount: 16500,
+    status: "Accepted",
+  },
+];
