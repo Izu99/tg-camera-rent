@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
-import { COMPANY_NAME } from "@/lib/data";
+import { COMPANY_NAME, THEME_COLOR } from "@/lib/data";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b3a56",
+  themeColor: THEME_COLOR,
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <TooltipProvider delayDuration={150}>
@@ -46,7 +46,7 @@ export default function RootLayout({
             <AppSidebar />
             <SidebarInset>
               <SiteHeader />
-              <main className="flex-1 pb-20 md:pb-6">{children}</main>
+              <main className="flex-1 pb-16 md:pb-0">{children}</main>
             </SidebarInset>
             <MobileBottomNav />
           </SidebarProvider>

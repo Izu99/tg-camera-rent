@@ -1,7 +1,6 @@
 import { TrendingUp, TrendingDown, Scale } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
+import { PageHeader, Panel } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -10,82 +9,91 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
 import { financeEntries } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export default function FinancePage() {
-  const sorted = [...financeEntries].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const rows = [...financeEntries].sort((a, b) => (a.date < b.date ? 1 : -1));
   const income = financeEntries
     .filter((e) => e.type === "Income")
-    .reduce((sum, e) => sum + e.amount, 0);
+    .reduce((s, e) => s + e.amount, 0);
   const expense = financeEntries
     .filter((e) => e.type === "Expense")
-    .reduce((sum, e) => sum + e.amount, 0);
+    .reduce((s, e) => s + e.amount, 0);
+  const net = income - expense;
 
   return (
-    <div className="flex flex-col gap-4 pb-6">
-      <PageHeader title="Finance" description="Income, expenses & payment activity" />
+    <>
+      <PageHeader
+        title="Finance"
+        description="Income, expenses and payment activity"
+      />
 
-      <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-3 md:px-6">
-        <StatCard
-          label="Total Income"
-          value={formatCurrency(income)}
-          icon={TrendingUp}
-          iconClassName="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-        />
-        <StatCard
-          label="Total Expenses"
-          value={formatCurrency(expense)}
-          icon={TrendingDown}
-          iconClassName="bg-red-500/10 text-red-600 dark:text-red-400"
-        />
-        <StatCard label="Net Profit" value={formatCurrency(income - expense)} icon={Scale} />
-      </div>
+      <div className="flex flex-col gap-3 p-3 md:p-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <StatCard
+            label="Income"
+            value={formatCurrency(income)}
+            icon={TrendingUp}
+            tone="success"
+            hint={`${financeEntries.filter((e) => e.type === "Income").length} entries`}
+          />
+          <StatCard
+            label="Expenses"
+            value={formatCurrency(expense)}
+            icon={TrendingDown}
+            tone="danger"
+            hint={`${financeEntries.filter((e) => e.type === "Expense").length} entries`}
+          />
+          <StatCard
+            label="Net position"
+            value={formatCurrency(net)}
+            icon={Scale}
+            tone={net >= 0 ? "success" : "danger"}
+            hint={net >= 0 ? "In surplus" : "In deficit"}
+          />
+        </div>
 
-      <div className="px-4 md:px-6">
-        <Card className="py-0">
-          <CardContent className="px-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="hidden sm:table-cell">Category</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="hidden md:table-cell">Method</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+        <Panel bleed>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Description</TableHead>
+                <TableHead className="hidden sm:table-cell">Category</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="hidden md:table-cell">Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((e) => (
+                <TableRow key={e.id}>
+                  <TableCell className="font-medium">{e.description}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <span className="rounded border border-border px-1.5 py-0.5 text-[0.6875rem] text-muted-foreground">
+                      {e.category}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{formatDate(e.date)}</TableCell>
+                  <TableCell className="hidden text-muted-foreground md:table-cell">
+                    {e.method}
+                  </TableCell>
+                  <TableCell
+                    className={cn(
+                      "tabular text-right font-medium",
+                      e.type === "Income" ? "text-success" : "text-danger"
+                    )}
+                  >
+                    {e.type === "Income" ? "+" : "−"}
+                    {formatCurrency(e.amount)}
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sorted.map((e) => (
-                  <TableRow key={e.id}>
-                    <TableCell className="font-medium">{e.description}</TableCell>
-                    <TableCell className="hidden text-muted-foreground sm:table-cell">
-                      <Badge variant="outline">{e.category}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">{formatDate(e.date)}</TableCell>
-                    <TableCell className="hidden text-muted-foreground md:table-cell">
-                      {e.method}
-                    </TableCell>
-                    <TableCell
-                      className={cn(
-                        "text-right tabular-nums font-medium",
-                        e.type === "Income"
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-red-600 dark:text-red-400"
-                      )}
-                    >
-                      {e.type === "Income" ? "+" : "−"}
-                      {formatCurrency(e.amount)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              ))}
+            </TableBody>
+          </Table>
+        </Panel>
       </div>
-    </div>
+    </>
   );
 }

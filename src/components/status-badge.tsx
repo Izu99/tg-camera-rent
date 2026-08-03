@@ -1,47 +1,73 @@
 import { cn } from "@/lib/utils";
 
-const STATUS_STYLES: Record<string, string> = {
-  // positive / success
-  Available: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Paid: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Completed: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Excellent: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Accepted: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Active: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  Returned: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  // info / in progress
-  Confirmed: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  Rented: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  Good: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  "In Progress": "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  Sent: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
-  // warning
-  Pending: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  Reserved: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  Partial: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  Fair: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  // negative
-  Overdue: "bg-red-500/15 text-red-700 dark:text-red-400",
-  Unpaid: "bg-red-500/15 text-red-700 dark:text-red-400",
-  Cancelled: "bg-red-500/15 text-red-700 dark:text-red-400",
-  "Needs Repair": "bg-red-500/15 text-red-700 dark:text-red-400",
-  "In Repair": "bg-red-500/15 text-red-700 dark:text-red-400",
-  Expired: "bg-red-500/15 text-red-700 dark:text-red-400",
-  Blacklisted: "bg-red-500/15 text-red-700 dark:text-red-400",
-  // neutral
-  Draft: "bg-muted text-muted-foreground",
-  Inactive: "bg-muted text-muted-foreground",
+type Tone = "success" | "info" | "warning" | "danger" | "neutral";
+
+/** Every status in the app maps to one of four semantic tones.
+ *  The tones themselves are defined once, in globals.css. */
+const TONE_BY_STATUS: Record<string, Tone> = {
+  // settled / healthy
+  Available: "success",
+  Paid: "success",
+  Completed: "success",
+  Excellent: "success",
+  Accepted: "success",
+  Active: "success",
+  Returned: "success",
+  // in flight
+  Confirmed: "info",
+  Rented: "info",
+  Good: "info",
+  "In Progress": "info",
+  Sent: "info",
+  // needs attention
+  Pending: "warning",
+  Reserved: "warning",
+  Partial: "warning",
+  Fair: "warning",
+  // problem
+  Overdue: "danger",
+  Unpaid: "danger",
+  Cancelled: "danger",
+  "Needs Repair": "danger",
+  "In Repair": "danger",
+  Expired: "danger",
+  Blacklisted: "danger",
+  // dormant
+  Draft: "neutral",
+  Inactive: "neutral",
 };
 
-export function StatusBadge({ status, className }: { status: string; className?: string }) {
+const TONE_STYLES: Record<Tone, { wrap: string; dot: string }> = {
+  success: { wrap: "text-success ring-success/25 bg-success/8", dot: "bg-success" },
+  info: { wrap: "text-info ring-info/25 bg-info/8", dot: "bg-info" },
+  warning: { wrap: "text-warning ring-warning/25 bg-warning/8", dot: "bg-warning" },
+  danger: { wrap: "text-danger ring-danger/25 bg-danger/8", dot: "bg-danger" },
+  neutral: {
+    wrap: "text-muted-foreground ring-border bg-muted",
+    dot: "bg-muted-foreground/60",
+  },
+};
+
+export function StatusBadge({
+  status,
+  className,
+}: {
+  status: string;
+  className?: string;
+}) {
+  const tone = TONE_BY_STATUS[status] ?? "neutral";
+  const styles = TONE_STYLES[tone];
+
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
-        STATUS_STYLES[status] ?? "bg-muted text-muted-foreground",
+        "inline-flex items-center gap-1.5 whitespace-nowrap rounded px-1.5 py-0.5",
+        "text-[0.6875rem] font-medium ring-1 ring-inset",
+        styles.wrap,
         className
       )}
     >
+      <span className={cn("size-1.5 rounded-full", styles.dot)} aria-hidden />
       {status}
     </span>
   );

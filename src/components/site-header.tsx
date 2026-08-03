@@ -1,60 +1,65 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Bell, Camera, Search } from "lucide-react";
+import { Aperture, Bell, Search } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { COMPANY_NAME } from "@/lib/data";
-import { navItems } from "@/components/nav-items";
-
-function useSectionTitle() {
-  const pathname = usePathname();
-  if (pathname === "/") return "Dashboard";
-  const match = [...navItems]
-    .filter((item) => item.href !== "/")
-    .sort((a, b) => b.href.length - a.href.length)
-    .find((item) => pathname.startsWith(item.href));
-  return match?.title ?? "Dashboard";
-}
+import { COMPANY_NAME, CURRENT_DATE } from "@/lib/data";
+import { sectionTitle } from "@/components/nav-items";
+import { formatDate } from "@/lib/format";
 
 export function SiteHeader() {
-  const title = useSectionTitle();
+  const pathname = usePathname();
+  const title = sectionTitle(pathname);
+
   return (
-    <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:px-6">
-      <SidebarTrigger className="hidden md:flex -ml-1" />
+    <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background/90 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/75 md:px-4">
+      <SidebarTrigger className="-ml-1 hidden size-7 md:flex" />
       <Separator orientation="vertical" className="mr-1 hidden h-4 md:block" />
 
       <div className="flex items-center gap-2 md:hidden">
-        <div className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Camera className="size-4" />
+        <div className="flex size-6 items-center justify-center rounded bg-primary text-primary-foreground">
+          <Aperture className="size-3.5" strokeWidth={2.25} />
         </div>
-        <span className="font-semibold">{COMPANY_NAME}</span>
+        <span className="text-sm font-semibold tracking-tight">{COMPANY_NAME}</span>
       </div>
 
-      <h1 className="hidden text-base font-semibold md:block">{title}</h1>
+      <nav className="hidden items-center gap-1.5 text-[0.8125rem] md:flex" aria-label="Breadcrumb">
+        <span className="text-muted-foreground">Ops</span>
+        <span className="text-muted-foreground/40">/</span>
+        <span className="font-medium">{title}</span>
+      </nav>
 
-      <div className="ml-auto flex items-center gap-2">
-        <div className="relative hidden sm:block">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search customers, equipment, invoices..."
-            className="h-9 w-56 pl-8 lg:w-72"
-          />
-        </div>
+      <div className="ml-auto flex items-center gap-1.5">
+        <span className="hidden text-xs text-muted-foreground lg:block">
+          {formatDate(CURRENT_DATE)}
+        </span>
+        <Separator orientation="vertical" className="mx-1 hidden h-4 lg:block" />
+
         <button
           type="button"
-          className="relative flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          aria-label="Search"
+          className="hidden h-7 items-center gap-2 rounded-md border border-border bg-muted/50 px-2 text-xs text-muted-foreground transition-colors hover:bg-muted sm:flex"
         >
-          <Bell className="size-5" />
-          <Badge className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-primary p-0 text-[10px] text-primary-foreground">
-            3
-          </Badge>
+          <Search className="size-3.5" />
+          <span>Search</span>
+          <kbd className="rounded border border-border bg-background px-1 font-mono text-[0.625rem]">
+            ⌘K
+          </kbd>
         </button>
-        <Avatar className="size-8">
-          <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+
+        <button
+          type="button"
+          aria-label="Notifications"
+          className="relative flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          <Bell className="size-4" />
+          <span className="absolute right-1 top-1 size-1.5 rounded-full bg-danger ring-2 ring-background" />
+        </button>
+
+        <Avatar className="size-7">
+          <AvatarFallback className="bg-primary/10 text-[0.625rem] font-semibold text-primary">
             TG
           </AvatarFallback>
         </Avatar>

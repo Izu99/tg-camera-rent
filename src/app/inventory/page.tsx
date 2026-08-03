@@ -6,8 +6,6 @@ import { PageHeader } from "@/components/page-header";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -18,102 +16,141 @@ import {
 import { categories, products } from "@/lib/data";
 import { formatCurrency } from "@/lib/format";
 import { getIcon } from "@/lib/icon-map";
+import { cn } from "@/lib/utils";
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("all");
+  const [category, setCategory] = useState("all");
 
-  const filtered = useMemo(() => {
+  const rows = useMemo(() => {
+    const q = search.trim().toLowerCase();
     return products.filter((p) => {
-      const matchesCategory = category === "all" || p.categoryId === category;
-      const matchesSearch =
-        !search ||
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.brand.toLowerCase().includes(search.toLowerCase());
-      return matchesCategory && matchesSearch;
+      const inCategory = category === "all" || p.categoryId === category;
+      const matches =
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.brand.toLowerCase().includes(q) ||
+        p.model.toLowerCase().includes(q);
+      return inCategory && matches;
     });
   }, [search, category]);
 
+  const onHire = products.reduce((s, p) => s + (p.quantity - p.availableQuantity), 0);
+
   return (
-    <div className="flex flex-col gap-4 pb-6">
+    <>
       <PageHeader
         title="Inventory"
-        description={`${products.length} equipment items across ${categories.length} categories`}
+        description={`${products.length} lines across ${categories.length} categories · ${onHire} units on hire`}
         actions={
-          <Button size="sm">
-            <Plus className="size-4" />
-            Add Equipment
+          <Button size="sm" className="h-8">
+            <Plus className="size-3.5" />
+            Add equipment
           </Button>
         }
       />
 
-      <div className="flex flex-col gap-2 px-4 sm:flex-row md:px-6">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search equipment by name or brand..."
-            className="pl-8"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <div className="flex flex-col gap-3 p-3 md:p-4">
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, brand or model…"
+              className="h-8 pl-8 text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="h-8 w-full text-sm sm:w-48">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              {categories.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="w-full sm:w-52">
-            <SelectValue placeholder="Category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All categories</SelectItem>
-            {categories.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
 
-      <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:px-6">
-        {filtered.map((p) => {
-          const Icon = getIcon(p.icon);
-          const pct = Math.round((p.availableQuantity / p.quantity) * 100);
-          return (
-            <Card key={p.id} className="gap-3 py-4">
-              <CardContent className="flex flex-col gap-3 px-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="size-5" />
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          {rows.map((p) => {
+            const Icon = getIcon(p.icon);
+            const pct = Math.round((p.availableQuantity / p.quantity) * 100);
+            const none = p.availableQuantity === 0;
+            return (
+              <article
+                key={p.id}
+                className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 transition-colors hover:border-primary/30"
+              >
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                    <Icon className="size-4" strokeWidth={1.9} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-[0.8125rem] font-medium leading-tight">
+                      {p.name}
+                    </h3>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {p.brand} · {p.year} · {p.condition}
+                    </p>
                   </div>
                   <StatusBadge status={p.status} />
                 </div>
-                <div>
-                  <p className="font-medium leading-tight">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {p.brand} · {p.year} · {p.condition}
-                  </p>
+
+                <div className="flex items-end justify-between gap-2">
+                  <div>
+                    <p className="label-micro">Daily rate</p>
+                    <p className="tabular text-base font-semibold leading-tight">
+                      {formatCurrency(p.dailyRate)}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="label-micro">Deposit</p>
+                    <p className="tabular text-xs text-muted-foreground">
+                      {formatCurrency(p.depositAmount)}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-lg font-semibold">{formatCurrency(p.dailyRate)}</span>
-                  <span className="text-xs text-muted-foreground">/ day</span>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">
                       {p.availableQuantity} of {p.quantity} available
                     </span>
-                    <span>{pct}%</span>
+                    <span
+                      className={cn(
+                        "tabular font-medium",
+                        none ? "text-danger" : pct <= 34 ? "text-warning" : "text-muted-foreground"
+                      )}
+                    >
+                      {pct}%
+                    </span>
                   </div>
-                  <Progress value={pct} className="h-1.5" />
+                  <div className="h-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={cn(
+                        "h-full rounded-full",
+                        none ? "bg-danger" : pct <= 34 ? "bg-warning" : "bg-primary"
+                      )}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-        {filtered.length === 0 && (
-          <p className="col-span-full py-10 text-center text-sm text-muted-foreground">
-            No equipment matches your search.
-          </p>
-        )}
+              </article>
+            );
+          })}
+
+          {rows.length === 0 && (
+            <p className="col-span-full rounded-lg border border-dashed border-border py-14 text-center text-sm text-muted-foreground">
+              No equipment matches that search.
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

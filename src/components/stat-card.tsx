@@ -1,55 +1,69 @@
 import type { LucideIcon } from "lucide-react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+type Tone = "default" | "success" | "warning" | "danger";
+
+const VALUE_TONE: Record<Tone, string> = {
+  default: "text-foreground",
+  success: "text-success",
+  warning: "text-warning",
+  danger: "text-danger",
+};
 
 export function StatCard({
   label,
   value,
   icon: Icon,
+  hint,
   trend,
   trendLabel,
-  iconClassName,
+  tone = "default",
 }: {
   label: string;
   value: string;
   icon: LucideIcon;
+  hint?: string;
   trend?: number;
   trendLabel?: string;
-  iconClassName?: string;
+  tone?: Tone;
 }) {
-  const positive = (trend ?? 0) >= 0;
+  const up = (trend ?? 0) >= 0;
+
   return (
-    <Card className="gap-3 py-4">
-      <CardContent className="flex items-start justify-between px-4">
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-2xl font-semibold tracking-tight">{value}</p>
+    <div className="rounded-lg border border-border bg-card px-3.5 py-3">
+      <div className="flex items-center gap-1.5">
+        <Icon className="size-3.5 shrink-0 text-muted-foreground/70" strokeWidth={2} />
+        <span className="label-micro truncate">{label}</span>
+      </div>
+
+      <p
+        className={cn(
+          "mt-2 text-[1.625rem] font-semibold leading-none tracking-tight",
+          VALUE_TONE[tone]
+        )}
+      >
+        {value}
+      </p>
+
+      {(trend !== undefined || hint) && (
+        <div className="mt-2 flex items-center gap-1.5 text-xs">
           {trend !== undefined && (
-            <div
+            <span
               className={cn(
-                "flex items-center gap-1 text-xs font-medium",
-                positive ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                "inline-flex items-center gap-0.5 font-medium tabular",
+                up ? "text-success" : "text-danger"
               )}
             >
-              {positive ? (
-                <ArrowUpRight className="size-3.5" />
-              ) : (
-                <ArrowDownRight className="size-3.5" />
-              )}
-              {Math.abs(trend)}% {trendLabel}
-            </div>
+              {up ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
+              {Math.abs(trend)}%
+            </span>
+          )}
+          {(trendLabel || hint) && (
+            <span className="truncate text-muted-foreground">{trendLabel ?? hint}</span>
           )}
         </div>
-        <div
-          className={cn(
-            "flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary",
-            iconClassName
-          )}
-        >
-          <Icon className="size-5" />
-        </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }

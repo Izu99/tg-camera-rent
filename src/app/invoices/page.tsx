@@ -1,7 +1,7 @@
 import { FileText, Wallet, AlertCircle } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
-import { StatusBadge } from "@/components/status-badge";
+import { PageHeader, Panel } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
+import { StatusBadge } from "@/components/status-badge";
 import {
   Table,
   TableBody,
@@ -10,74 +10,90 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
 import { invoices } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { customerName } from "@/lib/lookup";
 
 export default function InvoicesPage() {
-  const sorted = [...invoices].sort((a, b) => (a.date < b.date ? 1 : -1));
-  const totalInvoiced = invoices.reduce((sum, i) => sum + i.totalAmount, 0);
-  const totalCollected = invoices.reduce((sum, i) => sum + i.paidAmount, 0);
-  const outstanding = invoices.reduce((sum, i) => sum + i.balanceAmount, 0);
+  const rows = [...invoices].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const invoiced = invoices.reduce((s, i) => s + i.totalAmount, 0);
+  const collected = invoices.reduce((s, i) => s + i.paidAmount, 0);
+  const outstanding = invoices.reduce((s, i) => s + i.balanceAmount, 0);
+  const unpaidCount = invoices.filter((i) => i.paymentStatus !== "Paid").length;
 
   return (
-    <div className="flex flex-col gap-4 pb-6">
+    <>
       <PageHeader title="Invoices" description={`${invoices.length} invoices issued`} />
 
-      <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-3 md:px-6">
-        <StatCard label="Total Invoiced" value={formatCurrency(totalInvoiced)} icon={FileText} />
-        <StatCard label="Total Collected" value={formatCurrency(totalCollected)} icon={Wallet} />
-        <StatCard
-          label="Outstanding Balance"
-          value={formatCurrency(outstanding)}
-          icon={AlertCircle}
-          iconClassName="bg-amber-500/10 text-amber-600 dark:text-amber-400"
-        />
-      </div>
+      <div className="flex flex-col gap-3 p-3 md:p-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <StatCard
+            label="Invoiced"
+            value={formatCurrency(invoiced)}
+            icon={FileText}
+            hint={`${invoices.length} documents`}
+          />
+          <StatCard
+            label="Collected"
+            value={formatCurrency(collected)}
+            icon={Wallet}
+            tone="success"
+            hint={`${Math.round((collected / invoiced) * 100)}% of billed`}
+          />
+          <StatCard
+            label="Outstanding"
+            value={formatCurrency(outstanding)}
+            icon={AlertCircle}
+            tone={outstanding > 0 ? "warning" : "default"}
+            hint={`${unpaidCount} awaiting settlement`}
+          />
+        </div>
 
-      <div className="px-4 md:px-6">
-        <Card className="py-0">
-          <CardContent className="px-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Invoice</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead className="hidden sm:table-cell">Date</TableHead>
-                  <TableHead className="hidden md:table-cell">Method</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
-                  <TableHead className="hidden text-right lg:table-cell">Balance</TableHead>
-                  <TableHead>Status</TableHead>
+        <Panel bleed>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Invoice</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead className="hidden sm:table-cell">Issued</TableHead>
+                <TableHead className="hidden md:table-cell">Method</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="hidden text-right lg:table-cell">Balance</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((i) => (
+                <TableRow key={i.id}>
+                  <TableCell className="font-mono text-xs font-medium">
+                    {i.invoiceNumber}
+                  </TableCell>
+                  <TableCell className="font-medium">{customerName(i.customerId)}</TableCell>
+                  <TableCell className="hidden text-muted-foreground sm:table-cell">
+                    {formatDate(i.date)}
+                  </TableCell>
+                  <TableCell className="hidden text-muted-foreground md:table-cell">
+                    {i.paymentMethod}
+                  </TableCell>
+                  <TableCell className="tabular text-right font-medium">
+                    {formatCurrency(i.totalAmount)}
+                  </TableCell>
+                  <TableCell className="tabular hidden text-right lg:table-cell">
+                    {i.balanceAmount ? (
+                      <span className="text-danger">{formatCurrency(i.balanceAmount)}</span>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge status={i.paymentStatus} />
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sorted.map((i) => (
-                  <TableRow key={i.id}>
-                    <TableCell className="font-medium">{i.invoiceNumber}</TableCell>
-                    <TableCell>{customerName(i.customerId)}</TableCell>
-                    <TableCell className="hidden text-muted-foreground sm:table-cell">
-                      {formatDate(i.date)}
-                    </TableCell>
-                    <TableCell className="hidden text-muted-foreground md:table-cell">
-                      {i.paymentMethod}
-                    </TableCell>
-                    <TableCell className="text-right tabular-nums font-medium">
-                      {formatCurrency(i.totalAmount)}
-                    </TableCell>
-                    <TableCell className="hidden text-right tabular-nums text-muted-foreground lg:table-cell">
-                      {i.balanceAmount ? formatCurrency(i.balanceAmount) : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={i.paymentStatus} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              ))}
+            </TableBody>
+          </Table>
+        </Panel>
       </div>
-    </div>
+    </>
   );
 }
